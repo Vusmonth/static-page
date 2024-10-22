@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        background-color: #25293c;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 32px;
+        height: 100vh;
+        flex-direction: column;
+      }
+      iframe {
+        width: 98vw;
+        height: 98dvh;
+        border: 0px;
+      }
+      p {
+        color: #fff;
+        font-size: 18px;
+      }
+      label {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+      input {
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 16px;
+      }
+      button {
+        font-size: 14px;
+        font-weight: 700;
+        padding: 8px 16px;
+        border-radius: 8px;
+        color: #25293c;
+        background-color: #24cfa4;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="logo-div"
+      style="
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+      "
+    >
+      <img src="h2.svg" alt="" width="125px" />
+      <img src="bet.svg" alt="" width="125px" />
+    </div>
+
+    <div id="cpf-insert">
+      <label>
+        <p>CPF</p>
+        <input
+          maxlength="11"
+          id="cpf_input"
+          title="cpf"
+          type="tel"
+          placeholder="Digite seu CPF"
+        />
+      </label>
+
+      <button id="submit_button" onclick="onSubmitCPF()" type="button">
+        ENVIAR
+      </button>
+      <p id="error-message" style="display: none">CPF invalido</p>
+      <p
+        style="
+          position: absolute;
+          bottom: 10px;
+          left: 8px;
+          align-self: center;
+          font-size: 12px;
+        "
+      >
+        DEVELOPMENT
+      </p>
+    </div>
+
+    <script>
+      let hash;
+      let token;
+
+      function getHeaderToken() {
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+        myHeaders.append("Authorization", "Basic b3BhaDpvcGFoMTIz");
+
+        const urlencoded = new URLSearchParams();
+        urlencoded.append("grant_type", "client_credentials");
+
+        const requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: urlencoded,
+          redirect: "follow",
+        };
+
+        fetch(
+          "https://staging.complianceservice.app/auth/token",
+          requestOptions
+        )
+          .then((response) => response.json())
+          .then((result) => {
+            token = result.access_token;
+            console.log("fetched token", result.access_token);
+          })
+          .catch((error) => console.error(error));
+      }
+
+      function onSubmitCPF() {
+        document.getElementById("error-message").style.display = "none";
+        document.getElementById("submit_button").disabled = true;
+        let cpfInput = document.getElementById("cpf_input");
+        FetchHash(cpfInput.value);
+      }
+
+      function onLoadIframe() {
+        const frame = document.getElementById("your-iframe-id");
+
+        setTimeout(() => {
+          frame.contentWindow.postMessage(
+            {
+              token: token,
+            },
+            "*"
+          );
+          console.log("injected token", token);
+        }, 500);
+      }
+
+      function FetchHash(cpf) {
+        const myHeaders = new Headers();
+        myHeaders.append("Authorization", "Bearer " + token);
+
+        const requestOptions = {
+          method: "GET",
+          headers: myHeaders,
+          redirect: "follow",
+        };
+
+        fetch(
+          "https://staging.complianceservice.app/get-consulta-status/" + cpf,
+          requestOptions
+        )
+          .then((response) => response.json())
+          .then((result) => {
+            hash = result.hash;
+            createIframe(result.hash);
+          })
+          .catch((error) => {
+            document.getElementById("error-message").style.display = "block";
+            document.getElementById("submit_button").disabled = false;
+            console.error(error);
+          });
+      }
+
+      function createIframe(inHash) {
+        document.getElementById("cpf-insert").style.display = "none";
+        document.getElementById("logo-div").style.display = "none";
+        const iframe = document.createElement("iframe");
+
+        iframe.id = "your-iframe-id";
+        iframe.onload = onLoadIframe;
+        iframe.src = "https://staging.complianceservice.app/?hash=" + inHash;
+        iframe.allow = "camera; microphone";
+
+        document.body.appendChild(iframe);
+      }
+
+      getHeaderToken();
+    </script>
+  </body>
+</html>
