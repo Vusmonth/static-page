@@ -11,7 +11,9 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        gap: 32px;
         height: 100vh;
+        flex-direction: column;
       }
       iframe {
         width: 98vw;
@@ -40,6 +42,19 @@
     </style>
   </head>
   <body>
+    <div
+      style="
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+      "
+    >
+      <img src="h2.svg" alt="" width="125px" />
+      <img src="bet.svg" alt="" width="125px" />
+    </div>
+
     <div id="cpf-insert">
       <label>
         <p>CPF</p>
@@ -52,10 +67,22 @@
       </label>
 
       <button id="submit_button" onclick="onSubmitCPF()" type="button">
-        enviar
+        ENVIAR
       </button>
       <p id="error-message" style="display: none">CPF invalido</p>
+      <p
+        style="
+          position: absolute;
+          bottom: 10px;
+          left: 8px;
+          align-self: center;
+          font-size: 12px;
+        "
+      >
+        DEVELOPMENT
+      </p>
     </div>
+
     <script>
       let hash;
       let token;
@@ -147,7 +174,7 @@
         document.body.appendChild(iframe);
       }
 
-      getHeaderToken();
+      //getHeaderToken();
     </script>
   </body>
 </html>
