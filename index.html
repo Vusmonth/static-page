@@ -172,6 +172,7 @@
         iframe.id = "your-iframe-id";
         iframe.onload = onLoadIframe;
         iframe.src = "https://h2.opah.com.br/?hash=" + inHash;
+        iframe.allow = "camera; microphone";
 
         document.body.appendChild(iframe);
       }
