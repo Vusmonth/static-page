@@ -82,7 +82,7 @@
           font-size: 12px;
         "
       >
-        DEVELOPMENT
+        HOMOLOG
       </p>
     </div>
 
@@ -93,10 +93,7 @@
       function getHeaderToken() {
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-        myHeaders.append(
-          "Authorization",
-          "Basic dGVzdENsaWVudDY6dGVzdFNlY3JldDY="
-        );
+        myHeaders.append("Authorization", "Basic b3BhaDpvcGFoMTIz");
 
         const urlencoded = new URLSearchParams();
         urlencoded.append("grant_type", "client_credentials");
@@ -108,7 +105,7 @@
           redirect: "follow",
         };
 
-        fetch("https://h2.opah.com.br/v1/auth/token", requestOptions)
+        fetch("https://api.h2.opah.com.br/v1/auth/token", requestOptions)
           .then((response) => response.json())
           .then((result) => {
             token = result.access_token;
@@ -135,7 +132,7 @@
             "*"
           );
           console.log("injected token", token);
-        }, 200); // Adiciona um atraso de 500ms
+        }, 500);
       }
 
       function FetchHash(cpf) {
@@ -149,7 +146,7 @@
         };
 
         fetch(
-          "https://h2.opah.com.br/v1/validator/get-consulta-status/" + cpf,
+          "https://api.h2.opah.com.br/v1/validator/get-consulta-status/" + cpf,
           requestOptions
         )
           .then((response) => response.json())
@@ -171,7 +168,7 @@
 
         iframe.id = "your-iframe-id";
         iframe.onload = onLoadIframe;
-        iframe.src = "https://h2.opah.com.br/?hash=" + inHash;
+        iframe.src = "https://compliance.h2.opah.com.br/?hash=" + inHash;
         iframe.allow = "camera; microphone";
 
         document.body.appendChild(iframe);
