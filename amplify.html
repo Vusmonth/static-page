@@ -82,7 +82,7 @@
           font-size: 12px;
         "
       >
-        HOMOLOG
+        DEVELOPMENT - AMPLIFY
       </p>
     </div>
 
@@ -91,9 +91,19 @@
       let token;
 
       function getHeaderToken() {
+
+        const handleMessage = (event) => {
+          console.log(event.data)
+        }
+
+        window.addEventListener("message", handleMessage);
+
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-        myHeaders.append("Authorization", "Basic b3BhaDpvcGFoMTIz");
+        myHeaders.append(
+          "Authorization",
+          "Basic b3BhaDpvcGFoMTIz"
+        );
 
         const urlencoded = new URLSearchParams();
         urlencoded.append("grant_type", "client_credentials");
@@ -132,7 +142,7 @@
             "*"
           );
           console.log("injected token", token);
-        }, 500);
+        }, 200); // Adiciona um atraso de 500ms
       }
 
       function FetchHash(cpf) {

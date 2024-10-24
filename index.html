@@ -91,6 +91,13 @@
       let token;
 
       function getHeaderToken() {
+
+        const handleMessage = (event) => {
+          console.log(event.data)
+        }
+
+        window.addEventListener("message", handleMessage);
+
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
         myHeaders.append(
@@ -171,7 +178,7 @@
 
         iframe.id = "your-iframe-id";
         iframe.onload = onLoadIframe;
-        iframe.src = "https://h2.opah.com.br/?hash=" + inHash;
+        iframe.src = "http://localhost:3001/?hash=" + inHash;
         iframe.allow = "camera; microphone";
 
         document.body.appendChild(iframe);
